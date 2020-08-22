@@ -27,24 +27,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // Mark: View Func's
     
     override func viewDidLoad() {
-           super.viewDidLoad()
-           
-           self.Top.delegate = textDelegate
-           self.bottom.delegate = textDelegate
         
-        Top.defaultTextAttributes = memeTextAttributes
-                  bottom.defaultTextAttributes = memeTextAttributes
-               
-           Top.textAlignment = .center
-           Top.text = "TOP"
+        super.viewDidLoad()
+        
+        initializeTextField(textField: Top, text: "TAP TO EDIT TOP TEXT")
+        initializeTextField(textField: bottom, text: "TAP TO EDIT BOTTOM TEXT")
+        
+        // disable share button
+        share.isEnabled = false
+    }
     
-           bottom.textAlignment = .center
-           bottom.text = "BOTTOM"
-        
-           
-            share.isEnabled = false
-      
-       }
+    func initializeTextField(textField: UITextField, text: String) {
+        textField.delegate = textDelegate
+        textField.text = text
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = .center
+    }
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,12 +62,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // Mark: Meme Sruct & Meme Generate
 
-    struct Meme {
-        var topText: String
-        var bottomText: String
-        var originalImage: UIImage
-        var memedImage: UIImage
-    }
     
     
     func generateMemedImage() -> UIImage {
@@ -139,21 +131,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     // Mark: Action Button's
+    
+    
+    func pickFromSource(_ source: UIImagePickerController.SourceType) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self;
+        imagePicker.sourceType = source
+        present(imagePicker, animated: true, completion: nil)
+    }
 
     @IBAction func pickAnImage(_ sender: Any) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = .photoLibrary
-       present(imagePicker, animated: true, completion: nil)
-        share.isEnabled = true
+        pickFromSource(.photoLibrary)
+         share.isEnabled = true
         
     }
     
     @IBAction func pickAnImageFromCamera(_ sender: Any) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        present(imagePicker, animated: true, completion: nil)
-        share.isEnabled = true
+         pickFromSource(.camera)
+         share.isEnabled = true
     }
 
     
